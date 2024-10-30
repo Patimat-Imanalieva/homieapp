@@ -20,73 +20,84 @@ struct MyProfileView: View {
     var body: some View {
         NavigationView {
             VStack {
-                    Image("ProfileIcon")
-                        .frame(width:100, height:100)
-                        .clipShape(Circle())
-                        .padding(.top, 20)
-        
-                    Form {
-                        Section(header: Text("Данные профиля")) {
-                            TextField("Имя", text: $name)
-                            TextField("Никнейм", text: $nickname)
-                            TextField("О себе", text: $about)
-                    }
-                }
-                .frame(maxHeight: .infinity)
+                profileImage
                 
-                HStack(spacing: 15) {
-                    Button(action: clearData) {
-                        Text("Очистить")
-                            .foregroundColor(.black)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color("CardGray"))
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(
-                                    cornerRadius: 10)
-                                    .stroke(Color.black, lineWidth: 1)
-                            )
-                    }
-                    
-                    Button(action: saveData) {
-                        Text("Сохранить")
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.black)
-                            .cornerRadius(10)
-                    }
-                }
-                .padding()
+                profileForm
+                
+                actionButtons
             }
             .navigationTitle("Профиль")
             .onAppear(perform: loadSavedData) // данные загружаются каждый раз при открытии окна.
             .background(Color("CardGray"))
         }
     }
+}
+
+// Private Extension
+
+private extension MyProfileView {
     
-    // Private Func
+    var profileImage: some View {
+        Image("ProfileIcon")
+            .frame(width: 100, height: 100)
+            .clipShape(Circle())
+            .padding(.top, 20)
+    }
     
-    // Функция 1 - загрузка введенных данных. Обновляем saveData(), чтобы сохранять каждое поле в UserDefaults по отдельному ключу.
+    var profileForm: some View {
+        Form {
+            Section(header: Text("Данные профиля")) {
+                TextField("Имя", text: $name)
+                TextField("Никнейм", text: $nickname)
+                TextField("О себе", text: $about)
+            }
+        }
+        .frame(maxHeight: .infinity)
+    }
     
-    private func loadSavedData() {
+    var actionButtons: some View {
+        HStack(spacing: 15) {
+            Button(action: clearData) {
+                Text("Очистить")
+                    .foregroundColor(.black)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color("CardGray"))
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.black, lineWidth: 1)
+                    )
+            }
+            
+            Button(action: saveData) {
+                Text("Сохранить")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.black)
+                    .cornerRadius(10)
+            }
+        }
+        .padding()
+    }
+    
+    // Функция для загрузки сохраненных данных
+    func loadSavedData() {
         name = UserDefaults.standard.string(forKey: "userName") ?? ""
         nickname = UserDefaults.standard.string(forKey: "userNickname") ?? ""
         about = UserDefaults.standard.string(forKey: "userAbout") ?? ""
     }
     
-    // Функция 2 - сохраняем введенные данные при следующем сеансе открытия.
-    
-    private func saveData() {
+    // Функция для сохранения данных
+    func saveData() {
         UserDefaults.standard.set(name, forKey: "userName")
         UserDefaults.standard.set(nickname, forKey: "userNickname")
         UserDefaults.standard.set(about, forKey: "userAbout")
     }
     
-    // Функция 3 - если мы хотим очистить введенные данные (можно сказать сбрасываем их значения).
-    
-    private func clearData() {
+    // Функция для очистки данных
+    func clearData() {
         name = ""
         nickname = ""
         about = ""
@@ -98,4 +109,3 @@ struct MyProfileView_Previews: PreviewProvider {
         MyProfileView()
     }
 }
-
