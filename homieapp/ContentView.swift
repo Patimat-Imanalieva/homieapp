@@ -14,7 +14,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 imagesBlock()
-                    .frame(height: 350)
+                    .frame(height: 360)
                 
                 titleText()
                     .padding(.top, 170)
